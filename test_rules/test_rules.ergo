@@ -1,0 +1,18 @@
+:- use_argumentation_theory.
+
+Mortal::Thing.
+Immortal::Thing.
+Man::Thing.
+MagicUser::Man.
+
+@{default} \neg ?P:Immortal :- ?P:Man.
+@{default} ?P:Mortal :- ?P:Man.
+
+@{magical} ?X:Immortal :- ?X:MagicUser.
+@{magical} \neg ?X:Mortal :- ?X:MagicUser.
+
+\overrides({magical},default).
+
+Socrates:Man.
+Merlin:Man.
+Merlin:MagicUser.

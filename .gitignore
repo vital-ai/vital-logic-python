@@ -1,0 +1,4 @@
+.idea/
+ergoai/*
+**/.ergo_aux_files/
+**/__pycache__/
