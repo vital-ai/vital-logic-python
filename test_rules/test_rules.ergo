@@ -1,18 +1,94 @@
 :- use_argumentation_theory.
 
+////////////////////////////////////////////////////
+// defeasible reasoning example
+Human::Thing.
 Mortal::Thing.
 Immortal::Thing.
-Man::Thing.
-MagicUser::Man.
+Undead::Thing.
+MagicUser::Human.
 
-@{default} \neg ?P:Immortal :- ?P:Man.
-@{default} ?P:Mortal :- ?P:Man.
+Mortality::AbstractThing.
+Mortal:Mortality.
+Immortal:Mortality.
+Undead:Mortality.
+
+@{default} \neg ?P:Immortal :- ?P:Human.
+@{default} ?P:Mortal :- ?P:Human.
 
 @{magical} ?X:Immortal :- ?X:MagicUser.
 @{magical} \neg ?X:Mortal :- ?X:MagicUser.
 
 \overrides({magical},default).
 
-Socrates:Man.
-Merlin:Man.
+// Instance Data
+Socrates:Human.
+Merlin:Human.
 Merlin:MagicUser.
+
+// Rules
+mortality(?Human, ?Mortal) :- ?Human:Human,
+    ?Human:?Mortal, ?Mortal:Mortality.
+
+////////////////////////////////////////////////////
+// mutually exclusive and closed world class example
+ClosedWorldClass::AbstractThing.
+ExclusionClass::AbstractThing.
+
+// for cw/exclusion class,
+// if one case is true, the rest are false
+\neg ?Instance[?Method -> ?ExClassInstance] :- ?ExClassInstance:?ExclClass,
+    ?ExclClass:ClosedWorldClass,
+    ?ExclClass:ExclusionClass,
+    ?OtherExClassInstance:?ExclClass,
+    ?OtherExClassInstance \= ?ExClassInstance,
+    ?Instance[?Method -> ?OtherExClassInstance].
+
+// for cw/exclusion,
+// if all cases but one are false, then that one is true
+?Instance[?Method -> ?ClosedClass] :- ?Instance:?Class,
+    ?Class[|?Method -> ?CWC|],
+    ?CWC:ClosedWorldClass,
+    ?CWC:ExclusionClass,
+    ?ClosedClass:?CWC,
+    \naf \neg ?Instance[?Method -> ?ClosedClass],
+    ?Other = setof{?O | ?O:?CWC, ?O \= ?ClosedClass},
+    ?OtherTwo = setof{?O | ?O:?CWC, ?O \= ?ClosedClass, \neg ?Instance[?Method -> ?O]},
+    ?Other = ?OtherTwo.
+
+TrafficLight::Thing.
+
+TrafficSignal::AbstractThing.
+TrafficSignal:ClosedWorldClass.
+TrafficSignal:ExclusionClass.
+
+TrafficLight[|signal -> TrafficSignal|].
+
+// signal must be exactly one of these:
+RedSignal:TrafficSignal.
+GreenSignal:TrafficSignal.
+YellowSignal:TrafficSignal.
+
+// Instance Data
+lightOne:TrafficLight.
+lightOne[signal -> GreenSignal].
+
+lightTwo:TrafficLight.
+
+lightThree:TrafficLight.
+\neg lightThree[signal -> RedSignal].
+\neg lightThree[signal -> GreenSignal].
+
+lightFour:TrafficLight.
+\neg lightFour[signal -> RedSignal].
+
+// Rules
+traffic_light_state(?light, ?state) :- ?light:TrafficLight,
+    ?light[signal -> ?state], ?state:TrafficSignal.
+
+traffic_light_not_state(?light, ?state) :- ?light:TrafficLight,
+    \neg ?light[signal -> ?state], ?state:TrafficSignal.
+
+traffic_light_could_be_state(?light, ?state) :- ?light:TrafficLight,
+    \naf ?light[signal -> ?state],
+    \naf \neg ?light[signal -> ?state], ?state:TrafficSignal.
