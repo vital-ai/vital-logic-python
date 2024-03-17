@@ -37,9 +37,11 @@ ExclusionClass::AbstractThing.
 
 // for cw/exclusion class,
 // if one case is true, the rest are false
-\neg ?Instance[?Method -> ?ExClassInstance] :- ?ExClassInstance:?ExclClass,
+\neg ?Instance[?Method -> ?ExClassInstance] :- ?Instance:?Class,
+    ?Class[|?Method -> ?ExclClass|],
     ?ExclClass:ClosedWorldClass,
     ?ExclClass:ExclusionClass,
+    ?ExClassInstance:?ExclClass,
     ?OtherExClassInstance:?ExclClass,
     ?OtherExClassInstance \= ?ExClassInstance,
     ?Instance[?Method -> ?OtherExClassInstance].
