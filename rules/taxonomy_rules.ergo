@@ -1,0 +1,63 @@
+
+:- iriprefix{ VITAL_SOCIAL = 'http://vital.ai/ontology/vital-social#',VITAL_NLP = 'http://vital.ai/ontology/vital-nlp#',VITAL_CORE = 'http://vital.ai/ontology/vital-core#',VITAL_AIMP = 'http://vital.ai/ontology/vital-aimp#',VITAL = 'http://vital.ai/ontology/vital#',HALEY_TAXONOMY = 'http://vital.ai/ontology/haley-taxonomy#',HALEY_AI_QUESTION = 'http://vital.ai/ontology/haley-ai-question#',HALEY_AI_ML = 'http://vital.ai/ontology/haley-ai-ml#',HALEY_AI_KG = 'http://vital.ai/ontology/haley-ai-kg#',HALEY = 'http://vital.ai/ontology/haley#',CHAT_AI = 'http://vital.ai/ontology/chat-ai#' }.
+
+TaxonomyCategory::TaxonomyThing.
+
+?Child::?Parent :- ?Child:HALEY_TAXONOMY#TaxonomyNode,
+    ?Parent = TaxonomyCategory.
+
+?ChildCat::?ParentCat :- ?ChildCat::TaxonomyCategory,
+           ?ParentCat::TaxonomyCategory,
+           ?ChildCat[URI -> ?Child_URI],
+           ?ParentCat[URI -> ?Parent_URI],
+           ?Parent_URI \= ?Child_URI,
+           ?E[
+            hasEdgeSource -> ?Parent_URI,
+            hasEdgeDestination -> ?Child_URI],
+           ?E:HALEY_TAXONOMY#Edge_hasNarrowerCategory.
+
+/*
+?Child::TaxonomyCategory :- ?Child[type->'http://vital.ai/ontology/haley-ai-kg#NewsContentCategory'].
+
+?ChildCat::?ParentCat :-
+           ?ChildCat::TaxonomyCategory,
+           ?ParentCat::TaxonomyCategory,
+           ?ChildCat[URI -> ?Child_URI],
+           ?ParentCat[URI -> ?Parent_URI],
+           ?Parent_URI \= ?Child_URI,
+           ?E[
+            hasEdgeSource -> ?Parent_URI,
+            hasEdgeDestination -> ?Child_URI].
+*/
+
+sub_cat(?Parent, ?Child) :-
+    ?Parent::TaxonomyCategory,
+    ?Child::TaxonomyCategory,
+    ?Parent[URI -> ?PURI],
+    ?Child[URI -> ?CURI],
+    ?E[hasEdgeSource -> ?PURI, hasEdgeDestination -> ?CURI],
+    ?E:HALEY_TAXONOMY#Edge_hasNarrowerCategory.
+
+sub_category(?Parent, ?Child) :-
+    ?Parent:HALEY_TAXONOMY#TaxonomyNode,
+    ?Child:HALEY_TAXONOMY#TaxonomyNode,
+    ?Parent[URI -> ?PURI],
+    ?Child[URI -> ?CURI],
+    ?E:HALEY_TAXONOMY#Edge_hasNarrowerCategory[hasEdgeSource -> ?PURI, hasEdgeDestination -> ?CURI].
+
+sibling_category(?Category, ?Sibling) :-
+    ?Category:HALEY_TAXONOMY#TaxonomyNode,
+    ?Category[URI -> ?CURI],
+    ?EC:HALEY_TAXONOMY#Edge_hasNarrowerCategory[hasEdgeSource -> ?PURI, hasEdgeDestination -> ?CURI],
+    ?Parent[URI -> ?PURI],
+    \+ ?Parent[isRootCategory -> \true],
+    ?Parent:HALEY_TAXONOMY#TaxonomyNode,
+    ?ES:HALEY_TAXONOMY#Edge_hasNarrowerCategory[hasEdgeSource -> ?PURI, hasEdgeDestination -> ?SURI],
+    ?Sibling[URI -> ?SURI],
+    ?Sibling:HALEY_TAXONOMY#TaxonomyNode,
+    ?Category \= ?Sibling,
+    ?Parent \= ?Category,
+    ?Parent \= ?Sibling,
+    ?EC \= ?ES.
+
+
