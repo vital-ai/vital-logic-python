@@ -2,3 +2,6 @@
 ergoai/*
 **/.ergo_aux_files/
 **/__pycache__/
+build
+dist
+*.egg-info

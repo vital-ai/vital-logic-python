@@ -1,4 +1,4 @@
 logic_engine:
     ERGO_ROOT: '/Users/hadfield/Local/vital-git/vital-logic-python/ergoai/Coherent/ERGOAI_3.0/ErgoAI'
-    XSB_DIR: '/Users/hadfield/Local/vital-git/vital-logic-python/ergoai/Coherent/ERGOAI_3.0/XSB/config/aarch64-apple-darwin23.4.0'
+    XSB_DIR: '/Users/hadfield/Local/vital-git/vital-logic-python/ergoai/Coherent/ERGOAI_3.0/XSB/config/aarch64-apple-darwin23.6.0'
 

@@ -1,0 +1,3 @@
+logic_engine:
+    ERGO_ROOT: 'ergoai/Coherent/ERGOAI_3.0/ErgoAI'
+    XSB_DIR: 'ergoai/Coherent/ERGOAI_3.0/XSB/config/aarch64-apple-darwin23.6.0'

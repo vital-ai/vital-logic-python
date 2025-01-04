@@ -38,7 +38,8 @@ from pyxsb import pyxsb_start_session, pyxsb_end_session, \
     XSBAtom, XSBFunctor, XSBVariable, XSBString, \
     PYXSBException, \
     check_session_parameter, \
-    is_python3, dbgprint
+    is_python3
+    # dbgprint
 
 HILOG_WRAP='flapply'
 XSBMODULE_FUNCTOR = ":"

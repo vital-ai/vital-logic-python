@@ -9,10 +9,10 @@ setup(
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
     url='https://github.com/vital-ai/vital-logic-python',
-    packages=find_packages(),
+    packages=find_packages(exclude=['test_rules', 'tests', 'ergoai', 'rules', 'domain_model']),
     license='Apache License 2.0',
     install_requires=[
-            'vital-ai-vitalsigns',
+            'vital-ai-vitalsigns>=0.1.27',
             'six',
             'pyyaml'
         ],

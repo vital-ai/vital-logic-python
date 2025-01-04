@@ -1,4 +1,3 @@
-import sys
 import yaml
 from pyergo import \
     pyergo_start_session, pyergo_end_session,       \
